@@ -1,0 +1,171 @@
+// display: block
+@mixin block( $width: 0, $height: 0 ) {
+	display: block;
+	height: $height;
+	width: $width;
+}
+
+
+// CSS3: backface-visibility
+@mixin backface-visibility( $style: visible ) {
+	@each $prefix in -moz, -ms, -o, -webkit {
+		#{$prefix}-backface-visibility: $style;
+	}
+	backface-visibility: $style;
+}
+
+
+// CSS3: perspective
+@mixin perspective( $style: none ) {
+	@each $prefix in -moz, -ms, -o, -webkit {
+		#{$prefix}-perspective: $style;
+	}
+	perspective: $style;
+}
+
+
+// CSS3: transform-style
+@mixin transform-style( $style: flat ) {
+	@each $prefix in -moz, -ms, -o, -webkit {
+		#{$prefix}-transform-style: $style;
+	}
+	transform-style: $style;
+}
+
+
+// @font-face
+@mixin font-face( $name, $filename, $svg_id, $style:normal, $weight:normal ) {
+	@font-face {
+		font-family: "#{$name}";
+		font-style: $style;
+		font-weight: $weight;
+		src: font-url( "#{$filename}.eot" );
+		src: font-url( "#{$filename}.eot?#iefix" ) format( "embedded-opentype" ),
+			 font-url( "#{$filename}.woff" ) format( "woff" ),
+			 font-url( "#{$filename}.ttf" ) format( "truetype" ),
+			 font-url( "#{$filename}.svg##{$svg_id}" ) format( "svg" );
+	}
+}
+
+
+// Generated content
+@mixin generated-content( $width: 0, $height: 0 ) {
+	content: "";
+	display: block;
+	height: $height;
+	position: absolute;
+	width: $width;
+}
+
+
+// Gradients for IE
+@mixin filter-gradient( $start-color, $end-color, $orientation: vertical ) {
+	$gradient-type: if( $orientation == vertical, 0, 1 );
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient( gradientType=#{$gradient-type}, startColorstr='#{ie-hex-str( $start-color )}', endColorstr='#{ie-hex-str( $end-color )}' )";
+	filter: progid:DXImageTransform.Microsoft.gradient( gradientType=#{$gradient-type}, startColorstr="#{ie-hex-str( $start-color )}", endColorstr="#{ie-hex-str( $end-color )}" );
+}
+
+
+// Inline icons
+@mixin inline-icon( $width: 0, $height: 0, $margin: 0 ) {
+	display: inline-block;
+	height: $height;
+	margin: $margin;
+	vertical-align: middle;
+	width: $width;
+}
+
+
+// Opacity
+@mixin opacity( $opacity ) {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=#{round( $opacity * 100 )} )";
+	filter: alpha( opacity=#{round( $opacity * 100 )} );
+	opacity: $opacity;
+}
+
+
+// Pinstripes
+@mixin pinstripe( $background-image, $opacity, $pseudo-element:before ) {
+	> * {
+		position: relative;
+		z-index: 10;
+	}
+	
+	&:#{$pseudo-element} {
+		background: image-url( $background-image ) repeat 0 0;
+		bottom: 0;
+		@include generated-content( auto, auto );
+		left: 0;
+		@include opacity( $opacity );
+		right: 0;
+		top: 0;
+		z-index: 1;
+	}
+}
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+    @if $inset {
+      -webkit-box-shadow:inset $top $left $blur $color;
+      -moz-box-shadow:inset $top $left $blur $color;
+      box-shadow:inset $top $left $blur $color;
+    } @else {
+      -webkit-box-shadow: $top $left $blur $color;
+      -moz-box-shadow: $top $left $blur $color;
+      box-shadow: $top $left $blur $color;
+    }
+  }
+  
+  @mixin text-field {
+   display: inline-block;
+    outline: none;
+    text-decoration: none;
+    font: 14px/100% Arial, Helvetica, sans-serif;
+    padding: .5em;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    @include rounded();
+    @include box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.2));
+  }
+  
+  @mixin button($color: $red, $text_color: $white) {
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font: 14px/100% Arial, Helvetica, sans-serif;
+    padding: .5em 2em .55em;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    @include rounded();
+    @include box-shadow(0, 1px, 2px, rgba(0, 0, 0, 0.2));
+  
+    color: $text_color !important;
+    font-weight: bold;
+    border: solid 1px darken($color, 18%);
+    background: $color;
+    @include gradient(saturate($color, 15%), darken($color, 15%));
+  
+    &:hover {
+      text-decoration: none;
+      background: saturate($color, 10%);
+      @include gradient(saturate($color, 5%), darken($color, 5%));
+    }
+  
+    &:active {
+      position: relative;
+      top: 1px;
+      color: saturate($color, 15%);
+      @include gradient(saturate($color, 15%), lighten($color, 15%));
+    }
+  }
+  
+  @mixin rounded($radius: 0.5em) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+  }
+  
+  @mixin gradient($from, $to) {
+    background: -webkit-gradient(linear, left top, left bottom, from($from), to($to));
+    background: -moz-linear-gradient(top,  $from, $to);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+  }

@@ -1,5 +1,6 @@
-var num = 1,
-    price = 7;
+import $ from "./jQuery";
+
+var num = 1, price = 7;
 
 $(".fa-plus").on("click",function(){
   
